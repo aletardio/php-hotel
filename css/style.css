@@ -12,6 +12,7 @@ header {
 button.btn.btn-sm.btn-primary {
     background: blue;
     border: 1px solid blue;
+    margin-top: 28px;
 }
 
 button.btn.btn-sm.btn-primary:hover {

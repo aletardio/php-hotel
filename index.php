@@ -1,5 +1,24 @@
 <?php 
     include __DIR__.'/partials/vars.php';
+
+    // Inizializzazione della variabile con tutti gli hotel
+    $filteredHotels = $hotels;
+
+    // Inizializzazione della variabile con il valore del parametro 'parking' se è presente
+    $selectedParking = isset($_GET['parking']) ? $_GET['parking'] : '';
+    // Verifica del parametro 'parking'
+    if (isset($_GET['parking']) && $_GET['parking'] !== '') {
+
+        // Filtro degli hotel in base al valore del parametro 'parking'
+        $parkingFilter = $_GET['parking'] === 'true' ? true : false;
+        $filteredHotels = [];
+        
+        foreach ($hotels as $hotel) {
+            if ($hotel['parking'] === $parkingFilter) {
+                $filteredHotels[] = $hotel;
+            }
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -20,13 +39,17 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                    <form action="dashboard.php" method="get">
+                    <form action="./index.php" method="get">
                         <div class="row">
-                            <div class="col-6 py-2">
-                                <label for="control-label" class="form-label"></label>
-                                <input type="text" class="form-control" name="paragraph" id="my_paragraph" required>
+                            <div class="col-4 py-2 pb-5">
+                            <label for="parking">Seleziona Hotel</label>
+                            <select name="parking" class="form-select">
+                                <option value="" <?php echo $selectedParking === '' ? 'selected' : ''; ?>>Tutti</option>
+                                <option value="true" <?php echo $selectedParking === 'true' ? 'selected' : ''; ?>>Con parcheggio</option>
+                                <option value="false" <?php echo $selectedParking === 'false' ? 'selected' : ''; ?>>Senza parcheggio</option>
+                            </select>
                             </div>
-                            <div class="col-12 py-3 pb-5">
+                            <div class="col-2 py-2 pb-5">
                                 <button type="submit" class="btn btn-sm btn-primary">Filtra</button>
                             </div>
                         </div>
@@ -43,7 +66,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <?php foreach ($hotels as $hotel) { ?>        
+                            <?php foreach ($filteredHotels as $hotel) { ?>        
                                 <tr>
                                 <th scope="row"><?php echo $hotel ['name']; ?></th>
                                 <td><?php echo $hotel ['description']; ?></td>
