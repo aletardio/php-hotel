@@ -4,17 +4,40 @@
     // Inizializzazione della variabile con tutti gli hotel
     $filteredHotels = $hotels;
 
-    // Inizializzazione della variabile con il valore del parametro 'parking' se è presente
+    // Inizializzazione delle variabili con il valore del parametro 'parking' e 'vote se è presente
     $selectedParking = isset($_GET['parking']) ? $_GET['parking'] : '';
-    // Verifica del parametro 'parking'
-    if (isset($_GET['parking']) && $_GET['parking'] !== '') {
+    $selectedVote = isset($_GET['vote']) ? $_GET['vote'] : '';
 
-        // Filtro degli hotel in base al valore del parametro 'parking'
-        $parkingFilter = filter_var($_GET['parking'], FILTER_VALIDATE_BOOLEAN);
+    // Verifica del parametro 'parking' e 'vote'
+    if ($selectedParking !== '' || $selectedVote !== '') {
+
         $filteredHotels = [];
         
         foreach ($hotels as $hotel) {
-            if ($hotel['parking'] === $parkingFilter) {
+            $parkingCondition = false;
+            $voteCondition = false;
+        
+            // Condizione per il filtro sul parcheggio
+            if ($selectedParking === '') {
+                $parkingCondition = true;
+            } 
+            elseif ($selectedParking === 'true' && $hotel['parking']) {
+                $parkingCondition = true;  // Solo con parcheggio
+            } 
+            elseif ($selectedParking === 'false' && !$hotel['parking']) {
+                $parkingCondition = true;  // Solo senza parcheggio
+            }
+        
+            // Condizione per il filtro sul voto
+            if ($selectedVote === '') {
+                $voteCondition = true;
+            } 
+            elseif ($hotel['vote'] >= (int)$selectedVote) {
+                $voteCondition = true;
+            }
+        
+            // Aggiunge l'hotel filtrato alla lista se entrambe le condizioni sono vere
+            if ($parkingCondition && $voteCondition) {
                 $filteredHotels[] = $hotel;
             }
         }
@@ -41,13 +64,22 @@
                     <div class="col-12">
                     <form action="./index.php" method="get">
                         <div class="row">
-                            <div class="col-4 py-2 pb-5">
-                            <label for="parking">Seleziona Hotel</label>
-                            <select name="parking" class="form-select">
-                                <option value="" <?php echo $selectedParking === '' ? 'selected' : ''; ?>>Tutti</option>
-                                <option value="true" <?php echo $selectedParking === 'true' ? 'selected' : ''; ?>>Con parcheggio</option>
-                                <option value="false" <?php echo $selectedParking === 'false' ? 'selected' : ''; ?>>Senza parcheggio</option>
-                            </select>
+                            <div class="col-5 py-2 pb-5">
+                                <label for="parking"></label>
+                                <select name="parking" class="form-select">
+                                    <option value="" <?php echo $selectedParking === '' ? 'selected' : ''; ?>>Tutti</option>
+                                    <option value="true" <?php echo $selectedParking === 'true' ? 'selected' : ''; ?>>Con parcheggio</option>
+                                    <option value="false" <?php echo $selectedParking === 'false' ? 'selected' : ''; ?>>Senza parcheggio</option>
+                                </select>
+                            </div>
+                            <div class="col-5 py-2 pb-5">
+                                <label for="vote"></label>
+                                <select name="vote" class="form-select">
+                                    <option value="" <?php echo $selectedVote === '' ? 'selected' : ''; ?>>Tutti</option>
+                                    <option value="3" <?php echo $selectedVote === '3' ? 'selected' : ''; ?>>3 stelle</option>
+                                    <option value="4" <?php echo $selectedVote === '4' ? 'selected' : ''; ?>>4 stelle</option>
+                                    <option value="5" <?php echo $selectedVote === '5' ? 'selected' : ''; ?>>5 stelle</option>
+                                </select>
                             </div>
                             <div class="col-2 py-2 pb-5">
                                 <button type="submit" class="btn btn-sm btn-primary">Filtra</button>
@@ -61,7 +93,6 @@
                                 <tr>
                                 <th scope="col">Nome</th>
                                 <th scope="col">Descrizione</th>
-                                <th scope="col">Voto</th>
                                 <th scope="col">Distanza dal centro</th>
                                 </tr>
                             </thead>
@@ -70,7 +101,6 @@
                                 <tr>
                                 <th scope="row"><?php echo $hotel ['name']; ?></th>
                                 <td><?php echo $hotel ['description']; ?></td>
-                                <td><?php echo $hotel ['vote']; ?></td>
                                 <td><?php echo $hotel ['distance_to_center']; ?></td>
                                 </tr>
                             <?php } ?>
