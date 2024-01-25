@@ -1,5 +1,5 @@
 <?php 
-    include __DIR__.'/vars.php';
+    include __DIR__.'/partials/vars.php';
 ?>
 
 
