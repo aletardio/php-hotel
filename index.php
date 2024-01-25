@@ -10,7 +10,7 @@
     if (isset($_GET['parking']) && $_GET['parking'] !== '') {
 
         // Filtro degli hotel in base al valore del parametro 'parking'
-        $parkingFilter = $_GET['parking'] === 'true' ? true : false;
+        $parkingFilter = filter_var($_GET['parking'], FILTER_VALIDATE_BOOLEAN);
         $filteredHotels = [];
         
         foreach ($hotels as $hotel) {
