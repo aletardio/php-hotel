@@ -9,9 +9,19 @@ header {
     padding: 20px 0;
 }
 
+button.btn.btn-sm.btn-primary {
+    background: blue;
+    border: 1px solid blue;
+}
+
+button.btn.btn-sm.btn-primary:hover {
+    color: blue; 
+    border: 1px solid blue;
+    background: #fff;
+}
+
 main {
     padding: 40px 0;
-    background-color: #fff;
 }
 
 footer {
