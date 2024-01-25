@@ -1,3 +1,8 @@
+<?php 
+    include __DIR__.'/vars.php';
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +11,15 @@
     <title>PHP Hotel</title>
 </head>
 <body>
-    
+    <?php foreach ($hotels as $hotel){ ?>
+        <div>
+        <?php   echo $hotel ['name'].'<br>'; 
+                echo $hotel ['description'].'<br>';
+                echo $hotel ['vote'].'<br>';
+                echo $hotel ['distance_to_center'].'<br>';
+        ?>
+        </div>
+            
+    <?php } ?>
 </body>
 </html>
